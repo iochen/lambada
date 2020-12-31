@@ -1,0 +1,6 @@
+listen: :8080
+server: https://example.amazon.com/
+user: 2ee4f8f7-6abb-4f9b-ac82-5ed0a6cec155
+key: example key
+cert: cert.pem
+cert_key: key.pem
