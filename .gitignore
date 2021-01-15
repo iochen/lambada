@@ -1,2 +1,7 @@
 test*
 .idea/*
+
+cmd/server/workers/node_modules/
+cmd/server/workers/worker/
+cmd/server/workers/.cargo-ok
+cmd/server/workers/package-lock.json

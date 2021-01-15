@@ -5,6 +5,7 @@ import (
 	"compress/gzip"
 	"context"
 	"errors"
+	"io/ioutil"
 	"net/http"
 	"os"
 
@@ -43,10 +44,26 @@ func Handler(ctx context.Context, event Event) (string, error) {
 		body = []byte(event.Body)
 	}
 
-	request, err := lambada.NewRequestFromReader(bytes.NewReader(body))
+	unzippedReader, err := gzip.NewReader(bytes.NewReader(body))
 	if err != nil {
 		return "", err
 	}
+
+	unzippedReq, err := ioutil.ReadAll(unzippedReader)
+	if err != nil {
+		return "", err
+	}
+
+	decryptedReq, err := utils.Decrypt([]byte(os.Getenv("LBD_KEY")), unzippedReq)
+	if err != nil {
+		return "", err
+	}
+
+	request, err := lambada.NewRequestFromReader(bytes.NewReader(decryptedReq))
+	if err != nil {
+		return "", err
+	}
+
 	req, err := request.HttpRequest()
 	if err != nil {
 		return "", err
